@@ -1,0 +1,111 @@
+{% extends 'simulacion/base.html' %}
+
+{% block titulo %}Inicio - Simulador de Cultivo de Algas{% endblock %}
+
+{% block contenido %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="jumbotron bg-white p-5 rounded shadow">
+            <h1 class="display-4">
+                <i class="fas fa-leaf text-success"></i> 
+                Bienvenido al Simulador de Cultivo de Algas
+            </h1>
+            <p class="lead">
+                Sistema de simulación de escenarios productivos para el Centro de Cultivo de Algas en Caldera
+            </p>
+            <hr class="my-4">
+            <p>
+                Este sistema le permite calcular cuántas algas necesita plantar para obtener una cantidad específica 
+                de toneladas en una fecha determinada, considerando los porcentajes de pérdida y tiempos de cultivo.
+            </p>
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary btn-lg" href="{% url 'nueva_simulacion' %}" role="button">
+                    <i class="fas fa-plus-circle"></i> Crear Nueva Simulación
+                </a>
+                <a class="btn btn-success btn-lg" href="{% url 'lista_simulaciones' %}" role="button">
+                    <i class="fas fa-list"></i> Ver Mis Simulaciones
+                </a>
+            {% else %}
+                <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión para Comenzar
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-calculator fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Simulación Precisa</h5>
+                <p class="card-text">
+                    Calcula automáticamente las toneladas a plantar considerando porcentajes de pérdida 
+                    y tiempos de cultivo específicos para cada tipo de alga.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-alt fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Planificación Temporal</h5>
+                <p class="card-text">
+                    Determina la fecha exacta en la que debes iniciar el cultivo para cumplir 
+                    con tus fechas objetivo de entrega.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                <h5 class="card-title">Reportes en PDF</h5>
+                <p class="card-text">
+                    Exporta tus simulaciones a formato PDF con todos los detalles, 
+                    cálculos y explicaciones para tomar decisiones informadas.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-info-circle"></i> ¿Cómo funciona?
+            </div>
+            <div class="card-body">
+                <ol class="mb-0">
+                    <li class="mb-2">
+                        <strong>Selecciona el tipo de alga:</strong> Elige entre Entera, Pellet o Micronizada
+                    </li>
+                    <li class="mb-2">
+                        <strong>Ingresa las toneladas deseadas:</strong> Especifica cuántas toneladas necesitas obtener
+                    </li>
+                    <li class="mb-2">
+                        <strong>Define la fecha objetivo:</strong> Indica cuándo necesitas tener las algas listas
+                    </li>
+                    <li class="mb-2">
+                        <strong>Obtén los resultados:</strong> El sistema calcula automáticamente:
+                        <ul>
+                            <li>Toneladas a plantar (considerando pérdidas)</li>
+                            <li>Fecha de inicio de cultivo</li>
+                            <li>Días de cultivo necesarios</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Exporta el reporte:</strong> Descarga un PDF con todos los detalles de la simulación
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

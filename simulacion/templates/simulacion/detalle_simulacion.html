@@ -1,0 +1,213 @@
+{% extends 'simulacion/base.html' %}
+
+{% block titulo %}Simulación #{{ simulacion.id }} - Simulador de Algas{% endblock %}
+
+{% block contenido %}
+<div class="row mb-3">
+    <div class="col-12">
+        <a href="{% url 'lista_simulaciones' %}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Volver a Mis Simulaciones
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Información General -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle"></i> Información General
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td width="40%"><strong><i class="fas fa-hashtag"></i> ID de Simulación:</strong></td>
+                        <td>{{ simulacion.id }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fas fa-user"></i> Usuario:</strong></td>
+                        <td>{{ simulacion.usuario.username }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fas fa-clock"></i> Fecha de Creación:</strong></td>
+                        <td>{{ simulacion.creado_en|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fas fa-leaf"></i> Tipo de Alga:</strong></td>
+                        <td><span class="badge bg-success">{{ simulacion.tipo_alga.nombre }}</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Datos de Entrada -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-keyboard"></i> Datos de Entrada
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td width="40%"><strong><i class="fas fa-weight"></i> Toneladas Deseadas:</strong></td>
+                        <td><h4 class="mb-0 text-primary">{{ simulacion.toneladas_deseadas }} t</h4></td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fas fa-calendar-check"></i> Fecha Objetivo:</strong></td>
+                        <td>
+                            <h5 class="mb-0">{{ simulacion.fecha_objetivo|date:"d/m/Y" }}</h5>
+                            {% if dias_hasta_objetivo > 0 %}
+                                <small class="text-muted">(Faltan {{ dias_hasta_objetivo }} días)</small>
+                            {% elif dias_hasta_objetivo == 0 %}
+                                <small class="text-warning">(¡Hoy es la fecha objetivo!)</small>
+                            {% else %}
+                                <small class="text-danger">(Fecha ya pasada)</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Resultados Calculados -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-calculator"></i> Resultados de la Simulación
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td width="40%"><strong><i class="fas fa-seedling"></i> Toneladas a Plantar:</strong></td>
+                        <td><h4 class="mb-0 text-success">{{ simulacion.toneladas_a_plantar }} t</h4></td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fas fa-play-circle"></i> Fecha Inicio de Cultivo:</strong></td>
+                        <td>
+                            <h5 class="mb-0">{{ simulacion.fecha_inicio_cultivo|date:"d/m/Y" }}</h5>
+                            {% if dias_hasta_inicio > 0 %}
+                                <small class="text-info">(Iniciar en {{ dias_hasta_inicio }} días)</small>
+                            {% elif dias_hasta_inicio == 0 %}
+                                <small class="text-warning">(¡Debe iniciar hoy!)</small>
+                            {% else %}
+                                {% with dias_pasados=dias_hasta_inicio %}
+                                <small class="text-danger">(Debió iniciar hace {% widthratio dias_pasados 1 -1 %} días)</small>
+                                {% endwith %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fas fa-hourglass-half"></i> Días de Cultivo:</strong></td>
+                        <td><h5 class="mb-0">{{ simulacion.dias_cultivo }} días</h5></td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fas fa-exclamation-triangle"></i> Porcentaje de Pérdida:</strong></td>
+                        <td><span class="badge bg-warning text-dark">{{ simulacion.tipo_alga.porcentaje_perdida }}%</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Explicación de Cálculos -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-book"></i> Explicación de Cálculos
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6><i class="fas fa-arrow-right text-primary"></i> Cálculo de Toneladas a Plantar:</h6>
+                <p>
+                    Para compensar las pérdidas del <strong>{{ simulacion.tipo_alga.porcentaje_perdida }}%</strong> 
+                    durante el cultivo, se debe plantar <strong class="text-success">{{ simulacion.toneladas_a_plantar }} toneladas</strong> 
+                    para obtener <strong>{{ simulacion.toneladas_deseadas }} toneladas</strong> finales.
+                </p>
+                <div class="alert alert-light">
+                    <strong>Fórmula:</strong><br>
+                    <code>Toneladas a Plantar = Toneladas Deseadas × (1 + Porcentaje Pérdida / 100)</code>
+                </div>
+                
+                <h6 class="mt-4"><i class="fas fa-arrow-right text-primary"></i> Cálculo de Fecha de Inicio:</h6>
+                <p>
+                    Considerando que el cultivo de <strong>{{ simulacion.tipo_alga.nombre }}</strong> 
+                    requiere <strong>{{ simulacion.dias_cultivo }} días</strong>, se debe iniciar el cultivo 
+                    el <strong>{{ simulacion.fecha_inicio_cultivo|date:"d/m/Y" }}</strong> para cumplir con la fecha objetivo.
+                </p>
+                <div class="alert alert-light">
+                    <strong>Fórmula:</strong><br>
+                    <code>Fecha Inicio = Fecha Objetivo - Días de Cultivo</code>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notas -->
+        {% if simulacion.notas %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-sticky-note"></i> Notas Adicionales
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">{{ simulacion.notas }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Panel lateral con acciones -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-cogs"></i> Acciones
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'exportar_pdf' simulacion.pk %}" class="btn btn-danger">
+                        <i class="fas fa-file-pdf"></i> Descargar Reporte PDF
+                    </a>
+                    <a href="{% url 'eliminar_simulacion' simulacion.pk %}" class="btn btn-outline-danger">
+                        <i class="fas fa-trash"></i> Eliminar Simulación
+                    </a>
+                    <a href="{% url 'nueva_simulacion' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-plus-circle"></i> Nueva Simulación
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resumen visual -->
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie"></i> Resumen Visual
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="fas fa-seedling fa-4x text-success"></i>
+                    <h3 class="mt-2">{{ simulacion.toneladas_a_plantar }} t</h3>
+                    <small class="text-muted">Para plantar</small>
+                </div>
+                <hr>
+                <div class="mb-4">
+                    <i class="fas fa-arrow-down fa-2x text-warning"></i>
+                    <h5 class="mt-2">{{ simulacion.tipo_alga.porcentaje_perdida }}% pérdida</h5>
+                </div>
+                <hr>
+                <div>
+                    <i class="fas fa-check-circle fa-4x text-primary"></i>
+                    <h3 class="mt-2">{{ simulacion.toneladas_deseadas }} t</h3>
+                    <small class="text-muted">Resultado final</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

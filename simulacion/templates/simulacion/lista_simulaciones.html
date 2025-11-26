@@ -1,0 +1,96 @@
+{% extends 'simulacion/base.html' %}
+
+{% block titulo %}Mis Simulaciones - Simulador de Algas{% endblock %}
+
+{% block contenido %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>
+                <i class="fas fa-list"></i> Mis Simulaciones
+            </h2>
+            <a href="{% url 'nueva_simulacion' %}" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Nueva Simulación
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if simulaciones %}
+    <div class="row">
+        {% for simulacion in simulaciones %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="fas fa-leaf"></i> {{ simulacion.tipo_alga.nombre }}
+                            </span>
+                            <span class="badge bg-primary">
+                                #{{ simulacion.id }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ simulacion.toneladas_deseadas }} toneladas</h5>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-check"></i> Fecha objetivo:
+                            </small>
+                            <br>
+                            <strong>{{ simulacion.fecha_objetivo|date:"d/m/Y" }}</strong>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-seedling"></i> A plantar:
+                            </small>
+                            <br>
+                            <strong class="text-success">{{ simulacion.toneladas_a_plantar }} t</strong>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-play-circle"></i> Inicio cultivo:
+                            </small>
+                            <br>
+                            <strong>{{ simulacion.fecha_inicio_cultivo|date:"d/m/Y" }}</strong>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="fas fa-clock"></i> Creada:
+                            </small>
+                            <br>
+                            <small>{{ simulacion.creado_en|date:"d/m/Y H:i" }}</small>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'detalle_simulacion' simulacion.pk %}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye"></i> Ver Detalles
+                            </a>
+                            <a href="{% url 'exportar_pdf' simulacion.pk %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-file-pdf"></i> Descargar PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info text-center" role="alert">
+                <i class="fas fa-info-circle fa-3x mb-3"></i>
+                <h4>No tienes simulaciones aún</h4>
+                <p>Crea tu primera simulación para comenzar a planificar tu producción de algas.</p>
+                <a href="{% url 'nueva_simulacion' %}" class="btn btn-primary">
+                    <i class="fas fa-plus-circle"></i> Crear Primera Simulación
+                </a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'simulacion/base.html' %}
+
+{% block titulo %}Iniciar Sesión - Simulador de Algas{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+        <div class="card shadow-lg">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="fas fa-leaf fa-4x text-success mb-3"></i>
+                    <h3>Iniciar Sesión</h3>
+                    <p class="text-muted">Simulador de Cultivo de Algas</p>
+                </div>
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Usuario o contraseña incorrectos. Por favor, intente nuevamente.
+                    </div>
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">
+                            <i class="fas fa-user"></i> Usuario
+                        </label>
+                        <input type="text" 
+                               name="username" 
+                               class="form-control form-control-lg" 
+                               id="id_username" 
+                               placeholder="Ingrese su usuario"
+                               required 
+                               autofocus>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="id_password" class="form-label">
+                            <i class="fas fa-lock"></i> Contraseña
+                        </label>
+                        <input type="password" 
+                               name="password" 
+                               class="form-control form-control-lg" 
+                               id="id_password" 
+                               placeholder="Ingrese su contraseña"
+                               required>
+                    </div>
+                    
+                    <input type="hidden" name="next" value="{{ next }}">
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                        </button>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <p class="text-muted small mb-0">
+                        <i class="fas fa-info-circle"></i> 
+                        Para obtener acceso, contacte al administrador del sistema
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

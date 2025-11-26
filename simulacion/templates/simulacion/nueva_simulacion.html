@@ -1,0 +1,114 @@
+{% extends 'simulacion/base.html' %}
+
+{% block titulo %}Nueva Simulación - Simulador de Algas{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-plus-circle"></i> Nueva Simulación de Cultivo
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-4">
+                    Complete el formulario para calcular cuántas algas necesita plantar y cuándo debe iniciar el cultivo.
+                </p>
+                
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Tipo de Alga -->
+                    <div class="mb-3">
+                        <label for="{{ form.tipo_alga.id_for_label }}" class="form-label">
+                            <i class="fas fa-leaf"></i> {{ form.tipo_alga.label }}
+                        </label>
+                        {{ form.tipo_alga }}
+                        {% if form.tipo_alga.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.tipo_alga.errors }}
+                            </div>
+                        {% endif %}
+                        {% if form.tipo_alga.help_text %}
+                            <div class="form-text">{{ form.tipo_alga.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Toneladas Deseadas -->
+                    <div class="mb-3">
+                        <label for="{{ form.toneladas_deseadas.id_for_label }}" class="form-label">
+                            <i class="fas fa-weight"></i> {{ form.toneladas_deseadas.label }}
+                        </label>
+                        {{ form.toneladas_deseadas }}
+                        {% if form.toneladas_deseadas.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.toneladas_deseadas.errors }}
+                            </div>
+                        {% endif %}
+                        {% if form.toneladas_deseadas.help_text %}
+                            <div class="form-text">{{ form.toneladas_deseadas.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Fecha Objetivo -->
+                    <div class="mb-3">
+                        <label for="{{ form.fecha_objetivo.id_for_label }}" class="form-label">
+                            <i class="fas fa-calendar-alt"></i> {{ form.fecha_objetivo.label }}
+                        </label>
+                        {{ form.fecha_objetivo }}
+                        {% if form.fecha_objetivo.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.fecha_objetivo.errors }}
+                            </div>
+                        {% endif %}
+                        {% if form.fecha_objetivo.help_text %}
+                            <div class="form-text">{{ form.fecha_objetivo.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Notas Adicionales -->
+                    <div class="mb-3">
+                        <label for="{{ form.notas.id_for_label }}" class="form-label">
+                            <i class="fas fa-sticky-note"></i> {{ form.notas.label }}
+                        </label>
+                        {{ form.notas }}
+                        {% if form.notas.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.notas.errors }}
+                            </div>
+                        {% endif %}
+                        {% if form.notas.help_text %}
+                            <div class="form-text">{{ form.notas.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Botones -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'inicio' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calculator"></i> Calcular Simulación
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Información adicional -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-info-circle text-info"></i> Información sobre el cálculo
+                </h6>
+                <p class="card-text small mb-0">
+                    El sistema calculará automáticamente las toneladas que debe plantar considerando 
+                    el porcentaje de pérdida configurado para cada tipo de alga. También determinará 
+                    la fecha exacta en la que debe iniciar el cultivo para cumplir con su fecha objetivo.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

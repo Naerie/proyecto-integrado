@@ -1,0 +1,48 @@
+{% extends 'simulacion/base.html' %}
+
+{% block titulo %}Eliminar Simulación - Simulador de Algas{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">¿Está seguro que desea eliminar esta simulación?</p>
+                
+                <div class="alert alert-warning">
+                    <strong><i class="fas fa-info-circle"></i> Información de la simulación:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li><strong>ID:</strong> #{{ simulacion.id }}</li>
+                        <li><strong>Tipo de Alga:</strong> {{ simulacion.tipo_alga.nombre }}</li>
+                        <li><strong>Toneladas Deseadas:</strong> {{ simulacion.toneladas_deseadas }} t</li>
+                        <li><strong>Fecha Objetivo:</strong> {{ simulacion.fecha_objetivo|date:"d/m/Y" }}</li>
+                        <li><strong>Creada:</strong> {{ simulacion.creado_en|date:"d/m/Y H:i" }}</li>
+                    </ul>
+                </div>
+                
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i> 
+                    <strong>Advertencia:</strong> Esta acción no se puede deshacer.
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'detalle_simulacion' simulacion.pk %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Sí, Eliminar Simulación
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
