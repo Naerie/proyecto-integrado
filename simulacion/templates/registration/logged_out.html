@@ -1,0 +1,8 @@
+<!-- templates/registration/logged_out.html -->
+{% extends "base.html" %}
+{% block contenido %}
+<div class="alert alert-success mt-4">
+    Sesión cerrada correctamente.
+    <a href="{% url 'inicio' %}">Volver al inicio</a>
+</div>
+{% endblock %}
